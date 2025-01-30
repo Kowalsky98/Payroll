@@ -302,20 +302,18 @@ class HrPayslip(models.Model):
         res = []
         for contract in contracts.filtered(lambda c: c.resource_calendar_id):
             if not contract:
-                continue  # Evita que contract sea None
+                continue
 
             day_from = datetime.combine(date_from, time.min)
             day_to = datetime.combine(date_to, time.max)
             day_contract_start = datetime.combine(contract.date_start, time.min) if contract.date_start else day_from
 
-        # Agregamos validación para asegurarnos de que contract tiene un valor
             if contract:
                 contract = contract.with_context(employee_id=self.employee_id.id, exclude_public_holidays=True)
         
             if day_from < day_contract_start:
                 day_from = day_contract_start
 
-        # Cálculo de los diferentes tipos de días trabajados
             leaves = self._compute_leave_days(contract, day_from, day_to)
             res.extend(leaves)
 
@@ -327,7 +325,6 @@ class HrPayslip(models.Model):
             overtime = self._compute_overtime(contract, day_from, day_to)
             mondays = self._compute_mondays(contract, day_from, day_to)
 
-        # Agregamos los cálculos a la lista de resultados
             res.append(attendances)
             res.append(rest_days)
             res.append(night_bonus)
@@ -412,7 +409,7 @@ class HrPayslip(models.Model):
         current_date = day_from
 
         while current_date <= day_to:
-            if current_date.weekday() in [5, 6]:  # 5 = Sábado, 6 = Domingo
+            if current_date.weekday() in [5, 6]:
                 rest_days += 1
             current_date += timedelta(days=1)
 
@@ -475,7 +472,6 @@ class HrPayslip(models.Model):
         Holiday Days computation (with 0 as default).
         @return: returns a dictionary with holiday days for the period of the payslip.
         """
-        # Días feriados siempre 0 por defecto
         holiday_days = 0.0
         return {
             "name": _("Feriados"),
@@ -509,16 +505,16 @@ class HrPayslip(models.Model):
         current_date = day_from
 
         while current_date <= day_to:
-            if current_date.weekday() == 0:  # 0 representa el lunes
+            if current_date.weekday() == 0: 
                 monday_count += 1
             current_date += timedelta(days=1)
 
         return {
             "name": _("Lunes dentro del período"),
             "sequence": 7,
-            "code": "MONDAY_COUNT",
+            "code": "MONDAY",
             "number_of_days": monday_count,
-            "number_of_hours": monday_count * 8,  # Suponiendo una jornada de 8 horas
+            "number_of_hours": monday_count * 8,
             "contract_id": contract.id,
         }
     

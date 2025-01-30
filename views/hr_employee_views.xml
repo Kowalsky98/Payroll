@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <!-- Employee View -->
     <record id="hr_employee_view_form" model="ir.ui.view">
         <field name="name">hr.employee.view.form.payroll</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form" />
         <field name="arch" type="xml">
+            
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button
                     name="%(hr_payslip_action_employee)d"
@@ -17,6 +17,17 @@
                     <field name="payslip_count" widget="statinfo" string="Payslips" />
                 </button>
             </xpath>
+
+            <xpath expr="//page[@name='personal_information']/group/group[@name='emergency']" position="after">
+                <group string="Información Familiar">
+                    <separator string="Hijos Dependientes"/>
+                    <field name="dependent_children_ids" widget="one2many_list"
+                        string="Hijos" options="{'no_create': True}" readonly="0"/>
+                    <button name="action_add_child" type="object"
+                        string="Añadir" class="btn-primary"/>
+                </group>
+            </xpath>
+
         </field>
     </record>
 </odoo>
