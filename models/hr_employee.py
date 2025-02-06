@@ -18,3 +18,19 @@ class HrEmployee(models.Model):
     def _compute_payslip_count(self):
         for employee in self:
             employee.payslip_count = len(employee.slip_ids)
+
+    dependent_children_ids = fields.One2many(
+        "hr.employee.dependent", "employee_id",
+        string="Hijos Dependientes"
+    )
+
+    def action_add_child(self):
+        """ Abre un formulario para agregar un hijo dependiente. """
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Añadir Hijo Dependiente',
+            'res_model': 'hr.employee.dependent',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_employee_id': self.id},
+        }
