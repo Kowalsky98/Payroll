@@ -1,0 +1,30 @@
+<odoo>
+    <record id="custom_view_partner_bank_form" model="ir.ui.view">
+        <field name="name">custom.view.partner.bank.form</field>
+        <field name="model">res.partner.bank</field>
+        <field name="inherit_id" ref="base.view_partner_bank_form"/>
+        <field name="arch" type="xml">
+            <!-- Eliminar el campo Moneda -->
+            <xpath expr="//field[@name='currency_id']" position="replace">
+                <!-- Deja este bloque vacío para eliminar el campo -->
+            </xpath>
+
+            <!-- Eliminar el campo Enviar dinero -->
+            <xpath expr="//field[@name='allow_out_payment']" position="replace">
+                <!-- Deja este bloque vacío para eliminar el campo -->
+            </xpath>
+
+            <!-- Aquí podrías agregar tu sección con los campos personalizados, como en el ejemplo anterior -->
+            <xpath expr="//group[group/field[@name='acc_number']]" position="inside">
+                <group>
+                    <field name="x_identification_id" string="Cédula"/>
+                    <field name="x_payment_type" string="Tipo de Pago"/>
+                    <field name="x_credit_reference" string="N° de Referencia de Crédito"/>
+                    <field name="x_account_type" string="Tipo de Cuenta"/>
+                    <field name="x_check_duration" string="Duración del Cheque (Días)"/>
+                    <field name="x_beneficiary_email" string="Email del Beneficiario"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
